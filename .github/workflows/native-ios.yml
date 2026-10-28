@@ -1,0 +1,28 @@
+name: iOS simulator compile (manual)
+# Opt-in only. Review GitHub Actions quota before dispatching; never signs or uploads.
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  simulator:
+    runs-on: macos-26
+    timeout-minutes: 45
+    env:
+      CI: '1'
+      EXPO_NO_TELEMETRY: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npx expo prebuild --platform ios
+      - run: npm run check:native
+      - name: Compile app and embedded extension without signing
+        run: >-
+          xcodebuild -workspace ios/NotePilotCompanion.xcworkspace
+          -scheme NotePilotCompanion -configuration Debug
+          -sdk iphonesimulator -destination 'generic/platform=iOS Simulator'
+          -derivedDataPath .DerivedData CODE_SIGNING_ALLOWED=NO build
