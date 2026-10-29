@@ -1,0 +1,53 @@
+{
+  "expo": {
+    "name": "NotePilot Companion",
+    "slug": "notepilot-companion",
+    "version": "0.1.0",
+    "scheme": "notepilot",
+    "orientation": "default",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.notepilot.companion",
+      "buildNumber": "1",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "./plugins/withNotePilotShare",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Choose a handwritten question to crop and review.",
+          "cameraPermission": false,
+          "microphonePermission": false
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "build": {
+          "experimental": {
+            "ios": {
+              "appExtensions": [
+                {
+                  "targetName": "NotePilotShare",
+                  "bundleIdentifier": "com.notepilot.companion.share"
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
