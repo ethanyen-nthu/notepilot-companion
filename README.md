@@ -14,14 +14,20 @@ Switching from handwritten notes into a standalone chatbot interrupts studying. 
 
 This repository demonstrates platform research, native extension integration, typed domain boundaries, privacy-aware state management, automated tests, and reproducible development. It is an early foundation, not a claim of production AI or universal note-app integration.
 
-## What works now
+## Milestone 2: handwriting intelligence
+
+Import an image, crop the problem and your working, select one of five actions, and consent to analysis through an authenticated OpenAI gateway. Responses show uncertainty, typeset equations, and contextual Next Step / Explain Further actions. Save, copy, dismiss, and cancel controls reuse the existing interface. No typed prompt is required.
+
+Live requests require server configuration and explicit authorization; without it, use the visibly simulated examples. Claude/Gemini and Share Extension-to-app handoff are not implemented. See [gateway setup](docs/development.md#personal-gateway-setup) and [architecture and safeguards](docs/handwriting-intelligence.md). No paid API calls or model-accuracy evaluation were performed during development.
+
+## Existing foundation
 
 - Responsive study space, sidebar/compact navigation, onboarding, settings, and saved explanations.
 - Two original synthetic handwritten-style algebra examples rendered with native SVG paths.
 - Question-only or question-and-work selection within our own preview. These are preset regions, not OCR or a freeform lasso.
 - Explain, Solve, Hint, Next Step, and Check My Work, with explicitly **simulated** responses and scripted follow-ups.
 - Temporary response sheets; explicit local saving, deletion, and an option to dismiss responses when the app becomes inactive.
-- Provider preferences for Demo, OpenAI, and Anthropic. Live adapters fail closed; no API keys or network tutoring calls.
+- Provider choices for Demo and configured OpenAI; Claude and Gemini are unavailable placeholders. Provider keys stay on the server.
 - Native Share Extension source and an Expo config plugin: one image or plain-text item, local preview, size limits, image downsampling, dismissal, and a separate synthetic demo. Requires a custom native build; **not available in Expo Go**.
 
 Goodnotes, Notability, KilNotes, and Apple Notes are intended integration candidates, not tested or endorsed integrations. Each app controls what it exports. The extension does not read arbitrary notebooks, intercept highlights, observe another app’s Pencil strokes, modify its documents, or create an unrestricted overlay.
@@ -61,8 +67,10 @@ See [Windows and iPad development](docs/development.md), [platform feasibility](
 src/app/              Expo Router screens and native shell
 src/components/       Preview, response sheet, onboarding, UI primitives
 src/domain/           Typed tutoring requests and deterministic examples
-src/providers/        Provider boundary; offline adapter and blocked live adapters
-src/state/            Versioned storage schema, reducer, serialized writes
+src/providers/        Offline adapter and authenticated image gateway client
+src/state/            Versioned storage, reducer, in-memory gateway session
+shared/               Bounded vision request/response contracts
+server/               Authenticated gateway, OpenAI adapter, mocked HTTP tests
 native/NotePilotShare/ SwiftUI extension and activation rules
 plugins/              Idempotent Xcode target config plugin
 scripts/              Native project verification
@@ -75,7 +83,7 @@ docs/                 Decisions, constraints, security, testing, roadmap
 
 1. **Foundation:** local synthetic workflow and native share-preview implementation.
 2. **Native validation:** compile in Xcode/macOS CI, test on the target iPad, exercise share sheets and resized windows, validate VoiceOver and Pencil interaction.
-3. **Real questions:** explicit image/text import, user-reviewed OCR, crop review, cancellation, and an authenticated provider gateway with per-request consent and spending limits.
+3. **Handwriting intelligence (implemented):** image import, editable cropping, consent-based OpenAI vision, uncertainty, contextual follow-ups, and bounded personal gateway. Real-model accuracy and native-device evaluation remain pending.
 4. **Supported integrations:** confirm each note app’s export formats; add PDF import and optional App Group handoff where provisioning permits.
 5. **Later research:** App Intents, user-approved ScreenCaptureKit capture on supported iPadOS versions, and real-time voice tutoring. Each needs a separate privacy and lifecycle design.
 

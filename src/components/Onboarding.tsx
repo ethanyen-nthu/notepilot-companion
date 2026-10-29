@@ -17,7 +17,7 @@ const pages = [
   },
   {
     title: 'Try it with\nzero uploads.',
-    text: 'This foundation uses two synthetic math examples and scripted, simulated answers. Nothing is sent to an AI provider. Save only the explanations you choose.',
+    text: 'This foundation uses two synthetic math examples for its offline demo. Imported handwriting uses a separately configured gateway and asks before each AI upload. Save only the explanations you choose.',
     number: '03',
     detail: 'Offline demo · No account · No API keys',
   },

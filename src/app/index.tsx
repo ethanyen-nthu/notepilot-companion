@@ -1,3 +1,4 @@
+import { ImportedStudy } from '../components/ImportedStudy';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useFocusEffect } from 'expo-router';
 import { AppState, Pressable, ScrollView, Text, useWindowDimensions, View } from 'react-native';
@@ -24,6 +25,7 @@ const descriptions: Record<TutorAction, string> = {
 export default function StudyScreen() {
   const { width } = useWindowDimensions();
   const { state } = useAppState();
+  const [importMode, setImportMode] = useState(false);
   const [exampleId, setExampleId] = useState<ExampleId>('linear');
   const [selection, setSelection] = useState<Selection>('question');
   const [response, setResponse] = useState<TutorResponse | null>(null);
@@ -64,8 +66,17 @@ export default function StudyScreen() {
       if (version === requestVersion.current) setBusy(false);
     }
   }
+  if (importMode) return <ImportedStudy onDemo={() => setImportMode(false)} />;
   return (
     <ScrollView contentContainerStyle={[ui.page, width < 600 && { padding: 16 }]}>
+      <Button
+        onPress={() => {
+          dismiss();
+          setImportMode(true);
+        }}
+      >
+        Import my handwritten question
+      </Button>
       <View style={ui.row}>
         <Text style={[ui.eyebrow, { flex: 1 }]}>Your study space</Text>
         <DemoBadge />

@@ -1,6 +1,7 @@
+import { analysisSchema } from '../../shared/vision';
 import { z } from 'zod';
 import { actions, type ProviderId, type TutorResponse } from '../domain/tutoring';
-export const responseSchema = z.object({
+const demoResponseSchema = z.object({
   id: z.string().max(100),
   title: z.string().max(100),
   steps: z.array(z.string().max(2000)).max(10),
@@ -9,12 +10,22 @@ export const responseSchema = z.object({
   selection: z.enum(['question', 'question-and-work']),
   simulated: z.literal(true),
 });
+export const responseSchema = z.discriminatedUnion('simulated', [
+  demoResponseSchema,
+  demoResponseSchema.extend({
+    simulated: z.literal(false),
+    exampleId: z.literal('image'),
+    provider: z.literal('openai'),
+    model: z.string().max(100),
+    analysis: analysisSchema,
+  }),
+]);
 export const stateSchema = z.object({
   version: z.literal(1),
   onboarded: z.boolean(),
   saveLocally: z.boolean(),
   hideOnBackground: z.boolean(),
-  provider: z.enum(['demo', 'openai', 'anthropic']),
+  provider: z.enum(['demo', 'openai', 'anthropic', 'gemini']),
   saved: z.array(responseSchema).max(50),
 });
 export type AppState = z.infer<typeof stateSchema>;

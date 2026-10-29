@@ -1,19 +1,34 @@
+import type { VisionAnalysis } from '../../shared/vision';
 export const actions = ['Explain', 'Solve', 'Hint', 'Next Step', 'Check My Work'] as const;
 export type TutorAction = (typeof actions)[number];
 export type Selection = 'question' | 'question-and-work' | null;
-export type ProviderId = 'demo' | 'openai' | 'anthropic';
+export type ProviderId = 'demo' | 'openai' | 'anthropic' | 'gemini';
 export type ExampleId = 'linear' | 'quadratic';
 export interface TutorRequest {
   exampleId: ExampleId;
   selection: Exclude<Selection, null>;
   action: TutorAction;
 }
-export interface TutorResponse extends TutorRequest {
+export interface DemoResponse extends TutorRequest {
   id: string;
   title: string;
   steps: string[];
   simulated: true;
 }
+export type TutorResponse =
+  | DemoResponse
+  | {
+      id: string;
+      title: string;
+      steps: string[];
+      simulated: false;
+      exampleId: 'image';
+      selection: Exclude<Selection, null>;
+      action: TutorAction;
+      provider: 'openai';
+      model: string;
+      analysis: VisionAnalysis;
+    };
 export const examples = {
   linear: {
     title: 'A small equation. A clearer next step.',
@@ -73,7 +88,7 @@ const answers: Record<ExampleId, Record<TutorAction, string[]>> = {
     ],
   },
 };
-export function simulateResponse(request: TutorRequest, id: string): TutorResponse {
+export function simulateResponse(request: TutorRequest, id: string): DemoResponse {
   if (!examples[request.exampleId] || !actions.includes(request.action))
     throw new Error('Unsupported demo request.');
   if (request.action === 'Check My Work' && request.selection !== 'question-and-work')

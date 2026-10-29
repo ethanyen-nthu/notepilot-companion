@@ -1,3 +1,4 @@
+import { MathText } from '../components/MathText';
 import { ScrollView, Text, View } from 'react-native';
 import { Button, Card, DemoBadge, ui } from '../components/ui';
 import { examples } from '../domain/tutoring';
@@ -24,14 +25,22 @@ export default function SavedScreen() {
       )}
       {state.saved.map((item) => (
         <Card key={item.id}>
-          <DemoBadge />
+          {item.simulated ? (
+            <DemoBadge />
+          ) : (
+            <Text style={ui.eyebrow}>OpenAI � AI-generated, verify the reasoning</Text>
+          )}
           <Text style={ui.heading}>
-            {item.action} · {examples[item.exampleId].question}
+            {item.action} ·{' '}
+            {item.simulated ? examples[item.exampleId].question : 'Imported handwriting'}
           </Text>
-          {item.steps.map((step, index) => (
-            <Text style={ui.body} key={index}>
-              {step}
+          {!item.simulated && (
+            <Text style={ui.body}>
+              Recognition: {item.analysis.reading}. {item.analysis.uncertainty.join(' ')}
             </Text>
+          )}
+          {item.steps.map((step, index) => (
+            <MathText key={index} text={step} />
           ))}
           <View style={ui.row}>
             <Button

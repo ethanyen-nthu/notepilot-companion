@@ -1,3 +1,4 @@
+import { GatewaySessionProvider } from './GatewaySession';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   createContext,
@@ -50,7 +51,11 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       );
   }, [ready, state]);
   return (
-    <Context.Provider value={{ state, dispatch, ready, storageError }}>{children}</Context.Provider>
+    <GatewaySessionProvider>
+      <Context.Provider value={{ state, dispatch, ready, storageError }}>
+        {children}
+      </Context.Provider>
+    </GatewaySessionProvider>
   );
 }
 export function useAppState() {

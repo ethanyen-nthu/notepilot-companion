@@ -1,5 +1,6 @@
+import { GatewaySettings } from '../components/GatewaySettings';
 import { ScrollView, Switch, Text, View } from 'react-native';
-import { Button, Card, colors, DemoBadge, ui } from '../components/ui';
+import { Button, Card, colors, ui } from '../components/ui';
 import { type ProviderId } from '../domain/tutoring';
 import { useAppState } from '../state/AppState';
 const choices: { id: ProviderId; title: string; detail: string }[] = [
@@ -14,6 +15,7 @@ const choices: { id: ProviderId; title: string; detail: string }[] = [
     title: 'Anthropic',
     detail: 'Preference only · secure gateway not configured',
   },
+  { id: 'gemini', title: 'Gemini', detail: 'Not implemented in this milestone' },
 ];
 export default function SettingsScreen() {
   const { state, dispatch } = useAppState();
@@ -25,10 +27,9 @@ export default function SettingsScreen() {
       </Text>
       <Card>
         <Text style={ui.heading}>AI provider preference</Text>
-        <DemoBadge />
         <Text style={ui.body}>
-          Choose a provider for a future connection. The study space always runs the offline demo in
-          this release. No credentials are collected.
+          Choose OpenAI for imported handwriting, then connect your gateway below. Demo uses
+          synthetic examples only. Claude and Gemini remain unavailable.
         </Text>
         {choices.map((choice) => (
           <View key={choice.id} style={{ gap: 6 }}>
@@ -43,6 +44,7 @@ export default function SettingsScreen() {
           </View>
         ))}
       </Card>
+      <GatewaySettings />
       <Card>
         <Text style={ui.heading}>Local data</Text>
         <View style={{ flexDirection: 'row', gap: 20, alignItems: 'center' }}>
@@ -84,16 +86,16 @@ export default function SettingsScreen() {
       <Card>
         <Text style={ui.heading}>A clear boundary</Text>
         <Text style={ui.body}>
-          No AI uploads, analytics, microphone access, screen capture, or background monitoring are
-          implemented. Local settings and saved synthetic explanations use unencrypted app storage;
-          do not use this foundation for sensitive notes.
+          Only a reviewed crop is uploaded after explicit consent, through your gateway to OpenAI.
+          No analytics, microphone, or screen capture is used. Saved explanations use unencrypted
+          app storage. Avoid sensitive notes; copied text enters the system clipboard.
         </Text>
         <Text style={ui.body}>
           Share previews are held only for the extension session. The extension does not modify the
           source document or open the containing app automatically.
         </Text>
       </Card>
-      <Text style={ui.eyebrow}>NotePilot Companion · Foundation 0.1.0</Text>
+      <Text style={ui.eyebrow}>NotePilot Companion · Handwriting intelligence</Text>
     </ScrollView>
   );
 }

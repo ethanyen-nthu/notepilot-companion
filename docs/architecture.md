@@ -1,6 +1,6 @@
 # Architecture decision 001: native companion with a small extension
 
-**Status:** accepted for foundation; native runtime validation pending.
+**Status:** foundation decision retained; native runtime validation pending. The previously deferred image/gateway boundary is now implemented in [Milestone 2](handwriting-intelligence.md). The descriptions below record the original foundation design.
 
 ## Decision
 

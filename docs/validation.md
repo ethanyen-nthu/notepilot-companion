@@ -1,4 +1,16 @@
-# Foundation verification — 2026-10-28
+# Verification record
+
+## Milestone 2 — 2026-10-29
+
+- 22 Jest/React Native Testing Library tests passed, including crop bounds, consent-before-upload, response uncertainty, contextual follow-ups, cancellation, and stale-response suppression. Coverage thresholds pass for the selected domain/provider/reducer modules; this is not recognition accuracy or whole-app coverage.
+- 15 Node gateway tests passed with injected provider mocks and loopback HTTP. Cases include correct/incorrect partial algebra, integration by parts, unreadable writing, missing credentials, authentication/consent, size/dimension limits, usage caps, provider failure/refusal/incomplete output, timeout, and disconnect cancellation. No paid API request was made.
+- Web static and iOS Hermes exports passed. These remain JavaScript build results, not Swift compilation or physical-device validation.
+- The exported browser app imported the synthetic calculus JPEG, changed crop edges, and blocked analysis when disconnected from the gateway. No browser console errors were observed. Evidence: [image import](images/handwriting-import.jpg).
+- Expo-compatible patch updates were applied after dependency checking reported newer SDK 58 patches. The npm 11.19 lockfile resolution check passed.
+- Live OpenAI recognition quality, native picker/crop interaction, WebView math accessibility, and physical-device behavior are unverified. No accuracy statistics are claimed. Native Share Extension behavior is unchanged.
+- The original foundation is still unmerged on GitHub at the start of this milestone. This feature branch starts from the latest empty main and carries the existing foundation commits forward; it does not merge PR #1 automatically.
+
+## Foundation — 2026-10-28
 
 ## Executed locally on Windows
 

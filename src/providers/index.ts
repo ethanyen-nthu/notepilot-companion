@@ -18,7 +18,7 @@ export const demoProvider: TutorProvider = {
 // Fail closed until an authenticated gateway and per-request consent exist.
 // Provider credentials belong on that server, never in Expo public config.
 class UnconfiguredProvider implements TutorProvider {
-  constructor(readonly id: 'openai' | 'anthropic') {}
+  constructor(readonly id: 'openai' | 'anthropic' | 'gemini') {}
   async respond(): Promise<never> {
     throw new Error('Live AI is not connected. Choose the offline demonstration.');
   }
@@ -27,4 +27,5 @@ export const providers: Record<ProviderId, TutorProvider> = {
   demo: demoProvider,
   openai: new UnconfiguredProvider('openai'),
   anthropic: new UnconfiguredProvider('anthropic'),
+  gemini: new UnconfiguredProvider('gemini'),
 };

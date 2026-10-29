@@ -1,21 +1,14 @@
 # Security and privacy boundaries
 
-## Foundation behavior
+## Current behavior
 
-No provider credentials, backend endpoints, real student data, analytics SDKs, capture permissions, or microphone permissions are implemented. Demonstration answers are deterministic and visibly simulated. Provider preferences persist but live adapters reject every request without calling the network. The synthetic fixtures do not use copyrighted worksheets or student handwriting.
+See [Milestone 2 trust boundaries](handwriting-intelligence.md) for the implemented consent-based image pipeline, gateway authentication, validation, request limits, cancellation, and remaining production requirements.
 
-Saved explanations and settings are unencrypted AsyncStorage data. They are suitable only for this synthetic demo. The Save action is explicit; disabling saving removes history and prevents later saves. Storage failures are visible and never represented as successful deletion. OS backups and forensic deletion are not controlled by this foundation.
+The server reads credentials only from its environment and makes no AI request unless `ENABLE_PAID_AI=true`, a model and API key exist, and the personal gateway token is at least 32 characters. Client tokens stay in memory. Requests require explicit per-upload consent. Imported images are never answered by synthetic fixtures.
 
-The extension only receives explicitly shared content, accepts one supported item, limits input size, downsamples images, and retains previews in memory for its session. It does not copy files into an App Group or upload them. It is not an OCR pipeline. Plain text is displayed as text, never HTML or executable instructions.
+Live saves contain recognized note text and AI feedback in unencrypted AsyncStorage. Image processing may create temporary local OS cache files. Do not assume forensic deletion, encrypted backups, or provider zero retention. No analytics, microphone, screen capture, or cross-app document access was added. The native Share Extension is still preview-only.
 
-## Before real student content
-
-- Introduce user-reviewed crops/OCR and explicit per-request upload consent.
-- Implement a separately authenticated gateway; store provider secrets server-side. Never put secrets in Git, bundle code, or `EXPO_PUBLIC_*` variables.
-- Validate and bound input/output, reject unknown provider/action IDs, add cancellation/timeouts, rate limits, spending controls, and redacted diagnostics.
-- Treat handwritten/text content as untrusted task data, not instructions to tools or providers.
-- Define retention, deletion, backup, encryption, and revocation semantics before saving real notes.
-- Independently review capture/voice permissions, prominent active indicators, and background behavior.
+The gateway is a single-user development service, not production authentication or a distributed billing system. Its in-memory quota resets on restart. Do not deploy publicly without the additional controls listed in the milestone document. Exceptions must never be returned with provider keys or image content.
 
 ## Dependency audit exception
 

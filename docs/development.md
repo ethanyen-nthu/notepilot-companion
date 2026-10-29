@@ -4,7 +4,7 @@
 
 Use Node.js 24 LTS and npm. `npm ci` installs the committed lockfile. Run `npm start` for Expo Go, or `npm run web` for a desktop browser preview. Expo Go must support SDK 58; it cannot load our Swift extension. Do not describe browser checks as iPad tests.
 
-The layout supports narrow windows as well as an iPad landscape workspace. Use touch/Pencil to tap the fixed question or work regions. Choose an action, save or dismiss the simulated answer, and check Saved and Settings. Provider preferences remain inert until a real gateway is configured.
+The layout supports narrow windows as well as an iPad landscape workspace. Use touch/Pencil to tap the fixed question or work regions. Choose an action, save or dismiss the simulated answer, and check Saved and Settings. OpenAI becomes available for imported images after connecting an explicitly enabled gateway. Demo samples always remain simulated.
 
 ## Commands and what they prove
 
@@ -46,3 +46,30 @@ References: [Expo development builds](https://docs.expo.dev/develop/development-
 5. In a custom build, share one text item and PNG/JPEG from a supporting app. Verify cancel/done, unsupported types, oversized images, multiple items, and repeated invocation.
 6. Confirm the extension keeps no attachment files and does not change the host document.
 7. Record actual device, OS, Xcode, Expo/client, and source app versions in the verification record.
+
+## Personal gateway setup
+
+Use Node.js 24.13+ and install dependencies with `npm ci`. In PowerShell at the repository root:
+
+```powershell
+Copy-Item .env.example .env
+node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
+```
+
+Keep that locally generated value private and put it in `GATEWAY_ACCESS_TOKEN` in `.env`. It is a personal gateway credential, **not** an OpenAI key. Keep `ENABLE_PAID_AI=false` until you explicitly choose to make paid requests. Never paste any credentials into Git, chat, or Expo public config.
+
+To enable real analysis yourself, set `OPENAI_API_KEY` and an `OPENAI_MODEL` that supports image input and Responses structured outputs, review your provider account access/pricing, and set `ENABLE_PAID_AI=true`. The model is deliberately not guessed or hardcoded. Review the request/output limits in `.env.example`.
+
+```powershell
+npm run gateway
+# In a second terminal:
+npm start
+```
+
+For a desktop web preview, run `npm run web`; use `http://localhost:8787` in Settings and the exact browser origin in `WEB_ORIGIN` (default `http://localhost:8081`). For an iPad, localhost means the iPad: use your own trusted HTTPS endpoint forwarding to the gateway. Plain LAN HTTP is rejected for gateway credentials. No tunnel, domain, cloud deployment, or paid service is provisioned by this repo. Do not expose this personal gateway as a public multi-user service.
+
+In Settings choose **OpenAI**, enter the gateway origin and access token, and select **Connect gateway**. The connection checks status without sending an image or making a paid model request. It is held only in memory and must be re-entered after restarting the app. Then open **Import my handwritten question**, select a screenshot, crop the question plus work, choose an action, review the crop, and press **Consent and analyze**. Follow-ups ask again. Cancel stops waiting and aborts the request but may not prevent charges for already submitted work.
+
+Without credentials or explicit enablement the server rejects analysis; **Use simulated demo** stays available. Never present a synthetic answer as an answer to imported notes.
+
+`npm run test:gateway` runs isolated loopback HTTP tests with injected provider mocks, no secrets or paid requests. `npm run check` includes this suite. Windows sandbox environments may require permission for loopback test connections.
